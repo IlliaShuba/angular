@@ -1,0 +1,20 @@
+<button class="btn" [ngClass]="{'btn-danger': display_element,
+                                'btn-success': !display_element}" (click)="display_element=!display_element">{{ display_element ? 'Hide element' : 'Show element' }}</button>
+<ng-container *ngIf="display_element else short_product">
+  <h5>{{ product.title }}</h5>
+  <p>{{ product.description }}</p>
+  <p><b>{{ product.price }}</b></p>
+  <div [ngSwitch]="product.left">
+    <p *ngSwitchCase="0" class="text-bg-danger">There are no products on the stock</p>
+    <p *ngSwitchCase="1" class="text-bg-warning">There only one left</p>
+    <p *ngSwitchDefault class="text-bg-success">There are products on the stock: {{ product.left }}</p>
+  </div>
+  <button (click)="product.show_detail = !product.show_detail" class="btn btn-info">{{ product.show_detail ? 'Hide' : 'Show' }} details</button>
+  <p *ngIf="product.show_detail else text_shorted">{{ product.text }}</p>
+  <ng-template #text_shorted>
+    <p>Click to "Show detail" to open characteristics</p>
+  </ng-template>
+</ng-container>
+<ng-template #short_product>
+  <p>{{ product.title }} is hidden</p>
+</ng-template>

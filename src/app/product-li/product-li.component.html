@@ -1,0 +1,10 @@
+<li>
+  <ng-container *ngIf="display_element else hidden_format">
+    {{ product.title }}, {{ product.price }} {{ product.description }}, {{ product.description }}
+  </ng-container>
+  <ng-template #hidden_format>
+    {{ product.title }}, {{ product.price }}
+  </ng-template>
+  <button type="button" class="btn" (click)="display_element = !display_element" [ngClass]="{'btn-danger': !display_element,
+                                    'btn-success': display_element}">{{ display_element ? 'Hide' : 'Show' }} element</button>
+</li>

@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="header">
+    <div class="row">
+      <div class="logo">
+        <img [src]="logo_path" (click)="stateChanged()">
+      </div>
+      <div class="header-info" style="vertical-align: middle;">
+        <h2>My first Angular project!</h2>
+        <button type="button" class="btn btn-success" (click)="listChange()">{{ !list_display ? 'List' : 'Card' }} display</button>
+      </div>
+    </div>
+  </div>
+</div>
