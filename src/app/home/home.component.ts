@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class AppComponent {
+export class HomeComponent {
   @Input() logo_path: string = '../../assets/logo.png';
   display_hello_world: boolean = false;
   list_display: boolean = false;
@@ -41,7 +41,7 @@ export class AppComponent {
       left: 0
     },
     {
-      title: 'LAPTOP',
+      name: 'LAPTOP',
       description: 'Short description about this product',
       price: 6.20,
       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda blanditiis illo in ipsam ipsum, ' +
@@ -50,7 +50,7 @@ export class AppComponent {
       left:1
     },
     {
-      title: 'PC',
+      name: 'PC',
       description: 'PC description',
       price: 7.20,
       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda blanditiis illo in ipsam ipsum, ' +

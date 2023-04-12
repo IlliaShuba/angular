@@ -1,9 +1,7 @@
 :host{
   margin: 0 5px;
 }
-.header {
-  background-color: antiquewhite;
-}
+
 
 ul {
   display: flex;
@@ -12,7 +10,7 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #f1f1f1;
+  background-color: #333;
 }
 
 ul li a {
@@ -27,9 +25,13 @@ li {
   display: list-item;
   text-align: -webkit-match-parent;
   float: left;
+  color: white;
+  font-size: 20px;
+
 }
 
 li.active {
-  background-color: #6dff4f;
+  background-color: #04AA6D;
   color: white;
+  border-radius: 5px;
 }

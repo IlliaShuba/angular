@@ -6,7 +6,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
-  @Input() product: {price: number, title: string, description: string, text: string, show_detail: boolean, left: number};
+  @Input() product: {name: string, price: number, description: string, text: string, show_detail: boolean, left: number};
 
   display_element: boolean = true;
 }

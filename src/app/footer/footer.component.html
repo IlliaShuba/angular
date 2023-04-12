@@ -1,1 +1,7 @@
-<p>footer works!</p>
+<div class="row">
+  <ul class="horizontal ex">
+    <li *ngFor="let prod of links" [ngClass]="{'active': prod.active}" (click)="onEvent(prod.label)"><a>{{ prod.label }}</a></li>
+    <li routerLink="**" routerLinkActive="active"><a>Перша лінка</a></li>
+    <li [routerLink]="['/user', 1]" routerLinkActive="active"><a>Друга лінка</a></li>
+  </ul>
+</div>

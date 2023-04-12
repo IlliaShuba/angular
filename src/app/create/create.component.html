@@ -1,0 +1,62 @@
+<form [formGroup]="usersForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label>ID</label>
+    <input class="form-control" type="text" formControlName="id" [disabled]="true">
+  </div>
+  <div class="form-group">
+    <label for="name" class="form-label">Name</label>
+    <input id="name" class="form-control" type="text" formControlName="name">
+  </div>
+  <div class="form-group">
+    <label for="surname" class="form-label">Lastname</label>
+    <input id="surname" class="form-control" type="text" formControlName="lastname">
+  </div>
+  <div>
+    <label for="type" class="form-label">Lastname</label>
+    <select id="type" formControlName="type" class="form-select">
+      <option value="Type A">Type A</option>
+      <option value="Type B">Type B</option>
+      <option value="type C">Type C</option>
+    </select>
+  </div>
+  <div formArrayName="subjects" class="form-group" style="margin: 40px 0 40px 0;">
+    <label class="form-label">Subjects</label>
+    <button type="button" class="btn btn-info" (click)="addSubject()">Add subject</button>
+    <div *ngFor="let subject of subjects.controls; let i = index">
+      <h5>Subject {{i + 1}}</h5>
+      <label for="name-{{i}}">Name</label>
+      <input id="name-{{i}}" class="form-control" type="text" [formControlName]="i">
+    </div>
+  </div>
+  <div>
+    <label for="email" class="form-label">Email</label>
+    <input id="email" type="text" class="form-control" formControlName="email">
+    <span style="color: red; font-size: small;" *ngIf="usersForm.controls['email'].invalid && usersForm.controls['email'].touched">Invalid email</span>
+  </div>
+  <div>
+    <label for="password" class="form-label">Password</label>
+    <input id="password" class="form-control" type="password" formControlName="password">
+    <span style="color: red; font-size: small;" *ngIf="usersForm.controls['password'].invalid && usersForm.controls['password'].touched">Invalid password</span>
+  </div>
+  <div *ngIf="!usersForm.controls['id'].value">
+    <label class="form-label" for="confirm-password">Confirm password</label>
+    <input id="confirm-password" type="password" class="form-control" formControlName="confirmPassword">
+    <span style="color: red; font-size: small;" *ngIf="usersForm.controls['confirmPassword'].invalid && usersForm.controls['confirmPassword'].dirty">Passwords must match</span>
+  </div>
+  <div>
+    <label for="sex" class="form-check-inline">MALE</label>
+    <input id="sex" type="checkbox" class="form-check-input" formControlName="sex">
+  </div>
+  <div>
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" formControlName="description" id="description"></textarea>
+  </div>
+  <div>
+    <label class="form-label" for="phone">Phone</label>
+    <input type="number" id="phone" class="form-control" formControlName="phone">
+    <span style="color: red; font-size: small;" *ngIf="!usersForm.controls['phone'].valid">Invalid phone number</span>
+  </div>
+  <div>
+    <button class="btn btn-success" type="submit" [disabled]="!usersForm.valid">Save</button>
+  </div>
+</form>

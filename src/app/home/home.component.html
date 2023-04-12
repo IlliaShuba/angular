@@ -1,0 +1,21 @@
+<app-header [ngClass]="" [list_display]="list_display" (list_display_emitter)="changeDisplayList()" [logo_path]="logo_path" [display_hello_world]="display_hello_world" (changeHelloWorld)="changeDisplayState()"></app-header>
+<app-nav-bar [links]="links" ></app-nav-bar>
+<div class="inner-container">
+  <div class="container" style="margin-top: 10px;">
+    <ng-container *ngIf="!list_display else product_list">
+      <app-product [ngClass]="{'col-sm-4': true,
+                               'text-center': true}"
+                   *ngFor="let product of productsData" [product]="product">
+      </app-product>
+    </ng-container>
+    <ng-template #product_list>
+      <ul>
+        <app-product-li *ngFor="let product of productsData" [product]="product"></app-product-li>
+      </ul>
+    </ng-template>
+  </div>
+  <div class="center" *ngIf="display_hello_world">
+    <h1 [ngStyle]="{'color': 'red'}">Hello World</h1>
+  </div>
+</div>
+<app-footer [links]="links"></app-footer>

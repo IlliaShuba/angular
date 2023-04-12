@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +9,11 @@ import { HeaderComponent } from './header/header.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ProductLiComponent } from './product-li/product-li.component';
 import { ProductComponent } from './product/product.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { HomeComponent } from './home/home.component';
+import { UserComponent } from './user/user.component';
+import { CreateComponent } from './create/create.component';
+import { TimePipe } from './time.pipe';
 
 @NgModule({
   declarations: [
@@ -17,13 +22,19 @@ import { ProductComponent } from './product/product.component';
     NavBarComponent,
     FooterComponent,
     ProductComponent,
-    ProductLiComponent
+    ProductLiComponent,
+    NotFoundComponent,
+    HomeComponent,
+    UserComponent,
+    CreateComponent,
+    TimePipe
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
