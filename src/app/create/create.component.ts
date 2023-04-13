@@ -17,22 +17,6 @@ export class CreateComponent {
       workingHours: 123456789
     },
     {
-      id: 4,
-      name: 'Kiki',
-      lastname: 'Digf',
-      dateOfBirth: new Date("6/12/1999"),
-      salary: 152000,
-      workingHours: 12345
-    },
-    {
-      id: 7,
-      name: 'Jinaf',
-      lastname: 'Oplar',
-      dateOfBirth: new Date("12/4/2003"),
-      salary: 10000000,
-      workingHours: 65000
-    },
-    {
       id: 10,
       name: 'Kate',
       lastname: 'Doe',

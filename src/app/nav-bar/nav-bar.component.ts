@@ -8,7 +8,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 export class NavBarComponent {
   @Input() links: {label: string, active: boolean}[];
-  //@Output() changeActive = new EventEmitter<string>();
+  @Input() users: {name: string, dateOfBirth: Date, id: number, salary: number, workingHours: number, lastname: string}[];
 
   onEvent(label: string) {
     for (let prod of this.links) {

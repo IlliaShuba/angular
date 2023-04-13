@@ -1,10 +1,9 @@
 <div class="container">
-  <div class="inner-container">
-    <ul>
-      <li>{{ user.lastname }} {{ user.name }}</li>
-      <li>{{ user.dateOfBirth | date:'d.MM.y' }}</li>
-      <li>{{ user.salary | currency }}</li>
-      <li>{{ user.workingHours | time }}</li>
-    </ul>    <a routerLink="home">на головну</a>
-  </div>
+  <ul>
+    <li>Name: {{ user.lastname }} {{ user.name }}</li>
+    <li>Birth: {{ user.dateOfBirth | date:'d.MM.y' }}</li>
+    <li>Salary: {{ user.salary | currency }}</li>
+    <li>Working: {{ user.workingHours | time }}</li>
+  </ul>
+  <button> <a routerLink="/">back</a></button>
 </div>

@@ -1,5 +1,5 @@
 <app-header [ngClass]="" [list_display]="list_display" (list_display_emitter)="changeDisplayList()" [logo_path]="logo_path" [display_hello_world]="display_hello_world" (changeHelloWorld)="changeDisplayState()"></app-header>
-<app-nav-bar [links]="links" ></app-nav-bar>
+<app-nav-bar [links]="links"  [users] = "users"></app-nav-bar>
 <div class="inner-container">
   <div class="container" style="margin-top: 10px;">
     <ng-container *ngIf="!list_display else product_list">

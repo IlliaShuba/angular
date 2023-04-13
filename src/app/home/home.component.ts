@@ -14,6 +14,25 @@ export class HomeComponent {
     this.display_hello_world = !this.display_hello_world;
   }
 
+  users = [
+    {
+      id: 1,
+      name: 'Victor',
+      lastname: 'Velichko',
+      dateOfBirth: new Date("2/1/1990"),
+      salary: 50000,
+      workingHours: 123456789
+    },
+    {
+      id: 10,
+      name: 'Kate',
+      lastname: 'Doe',
+      dateOfBirth: new Date("6/6/1980"),
+      salary: 88000,
+      workingHours: 12345
+    }
+  ]
+
   links = [
     {
       label: 'First link',
@@ -34,7 +53,7 @@ export class HomeComponent {
     {
       name: 'TELEPHONE',
       description: 'Short description about this product',
-      price: 5.55,
+      price: 100,
       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam animi dignissimos dolorem dolorum ' +
         'eaque eos eum illo incidunt iste minima mollitia non quae repellat repellendus sit suscipit tenetur ullam, veniam!',
       show_detail: false,
@@ -43,7 +62,7 @@ export class HomeComponent {
     {
       name: 'LAPTOP',
       description: 'Short description about this product',
-      price: 6.20,
+      price: 500,
       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda blanditiis illo in ipsam ipsum, ' +
         'nesciunt nobis tempore. Ab corporis dolorum eos iste molestiae nemo numquam officiis. Accusantium laudantium natus perspiciatis.',
       show_detail: false,
@@ -52,7 +71,7 @@ export class HomeComponent {
     {
       name: 'PC',
       description: 'PC description',
-      price: 7.20,
+      price: 600,
       text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda blanditiis illo in ipsam ipsum, ' +
         'nesciunt nobis tempore. Ab corporis dolorum eos iste molestiae nemo numquam officiis. Accusantium laudantium natus perspiciatis.',
       show_detail: false,
@@ -64,9 +83,4 @@ export class HomeComponent {
     this.list_display = !this.list_display;
   }
 
-  // ChangeStateLinks(label: string) {
-  //   for (let link of this.links) {
-  //     link.active = link.label == label;
-  //   }
-  // }
 }

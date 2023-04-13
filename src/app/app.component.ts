@@ -64,9 +64,4 @@ export class AppComponent {
     this.list_display = !this.list_display;
   }
 
-  // ChangeStateLinks(label: string) {
-  //   for (let link of this.links) {
-  //     link.active = link.label == label;
-  //   }
-  // }
 }
