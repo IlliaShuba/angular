@@ -1,13 +1,15 @@
 :host {
   background-color: #95c2de;
-
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  margin: 0;
 }
+
 
 .mainbox {
   background-color: #95c2de;
   margin: auto;
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

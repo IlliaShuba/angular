@@ -1,211 +1,157 @@
-import { Component } from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from "@angular/forms";
+import {MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from '@angular/router';
+
+const EMAIL_REGEX = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+const PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$")
+const PHONE_REGEX = new RegExp("^\\+?3?8?(0[5-9][0-9]\\d{7})$")
+const SAVED_USERS_KEY = "savedUsers"
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent {
-  users = [
-    {
-      id: 1,
-      name: 'Victor',
-      lastname: 'Velichko',
-      dateOfBirth: new Date("2/1/1990"),
-      salary: 50000,
-      workingHours: 123456789
-    },
-    {
-      id: 10,
-      name: 'Kate',
-      lastname: 'Doe',
-      dateOfBirth: new Date("6/6/1980"),
-      salary: 88000,
-      workingHours: 12345
-    }
+export class CreateComponent implements OnInit{
+  savedUsers: FormUser[] = []
+  types = [
+    "Type A",
+    "Type B",
+    "Type C"
   ]
-
-  formUsers = [
-    {
-      id: 1, // генерується автоматично
-      name: 'Victor', // текстове поле (обов'язкове поле)
-      lastname: 'Velichko', // текстове поле (обов'язкове поле)
-      type: 'Type B', // селект або радіобатони
-      email: 'mail@mail.com', // текстове поле з валідатором
-      password: 'Helloworld1!', // текстове поле з валідатором (обов'язкове
-      confirmPassword: 'Helloworld1!', // текстове поле з валідатором
-      subjects: ['1', '2', '3', '4', '5'], // FormArray
-      description: 'gbnfgb', // textarea
-      sex: 'MALE', // checkbox
-      phone: '380453453454' // текстове поле з валідатором
-    },
-    {
-      id: 2, // генерується автоматично
-      name: 'Victor', // текстове поле (обов'язкове поле)
-      lastname: 'Velichko', // текстове поле (обов'язкове поле)
-      type: 'Type C', // селект або радіобатони
-      email: 'mail@mail.com', // текстове поле з валідатором
-      password: 'Helloworld1!', // текстове поле з валідатором (обов'язкове
-      confirmPassword: 'Helloworld1!', // текстове поле з валідатором
-      subjects: ['1', '2', '3'], // FormArray
-      description: '', // textarea
-      sex: 'MALE', // checkbox
-      phone: '380453453454' // текстове поле з валідатором
-    }
-  ]
-  fb = new FormBuilder();
-
-  usersForm = this.fb.group({
-      id: new FormControl({value: '', disabled: true}),
-      name: ['', Validators.required],
-      lastname: ['', Validators.required],
-      type: [''],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()]).+$')]],
-      confirmPassword: ['', [Validators.required]],
-      subjects: this.fb.array([]),
+  userForm = this.fb.group({
+      id: [{value: null, disabled: true}],
+      name: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      type: ['default', []],
+      email: ['', [Validators.required, /*Validators.pattern(EMAIL_REGEX)*/ Validators.email]],
+      password: ['', [Validators.required, Validators.pattern(PASSWORD_REGEX)]],
+      confirmPassword: ['', [Validators.required, Validators.pattern(PASSWORD_REGEX)]],
+      subjects: this.fb.array([
+        this.fb.control('')
+      ]),
       description: [''],
-      sex: [''],
-      phone: ['', [Validators.pattern('^380\\d{9}$')]],
+      sex: ['true'],
+      phone: ['', [Validators.pattern(PHONE_REGEX)]]
     },
     {
-      validators: [this.passwordMatches('password', 'confirmPassword')]
+      validators: this.checkPassword("password", "confirmPassword")
     });
 
-
-
-  phoneValidator () {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const phoneRegExp = /^[0-9]{10}$/;
-      let isValid = phoneRegExp.test(control.value);
-      if (isValid) {
-        return {valid: true}
-      } else {
-        return null;
-      }
-    };
+  constructor(private fb: FormBuilder,private router: Router) {
   }
 
-  passwordMatches(password: string, confirmPassword: string) {
-    return (formGroup: FormGroup): ValidationErrors | null => {
-      if (formGroup.controls[confirmPassword].value === formGroup.controls[password].value || formGroup.controls['id'].value) {
-        formGroup.controls[confirmPassword].setErrors(null);
-        return null;
-      } else {
-        formGroup.controls[confirmPassword].setErrors({'incorrect': true});
-        return {invalid: true};
-      }
-    }
-  }
-
-  get subjects() {
-    return this.usersForm.get('subjects') as FormArray;
-  }
-
-  addSubject() {
-    this.subjects.push(this.fb.control(''))
-  }
-
-  saveToLocalStorage(): void {
-    localStorage.setItem('users', JSON.stringify(this.users));
-  }
-
-  ngOnInit() {
-    this.saveToLocalStorage();
-
-  }
-
-  generateRandomString(): string {
-    let result = '';
-    const characters = '0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < 10; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+  ngOnInit(): void {
+    this.savedUsers = JSON.parse(localStorage.getItem(SAVED_USERS_KEY) ?? "[]");
   }
 
   onSubmit() {
-    if (this.usersForm.valid) {
-      if (!this.usersForm.controls['id'].value) {
-        let arr: any = [];
-        for ( let subj of this.subjects.controls) {
-          arr.push(subj.value);
-        }
-        this.formUsers.push(
-          {
-            id: parseInt(this.generateRandomString()),
-            name: this.usersForm.controls['name'].value,
-            lastname: this.usersForm.controls['lastname'].value,
-            type: this.usersForm.controls['type'].value,
-            email: this.usersForm.controls['email'].value,
-            password: this.usersForm.controls['password'].value,
-            confirmPassword: this.usersForm.controls['confirmPassword'].value,
-            subjects: arr, // FormArray
-            description: this.usersForm.controls['description'].value,
-            sex: this.usersForm.controls['sex'].value ? 'MALE' : 'FEMALE', // checkbox
-            phone: this.usersForm.controls['phone'].value.toString() // текстове поле з валідатором
-          }
-        )
-      }
-      else {
-        let elem: any;
-        for (let item of this.formUsers) {
-          if (item.id === this.usersForm.controls['id'].value) {
-            elem = item;
-          }
-        }
-        let arr: any = [];
-        for ( let subj of this.subjects.controls) {
-          arr.push(subj.value);
-        }
-        if (elem) {
-          elem['name'] = this.usersForm.controls['name'].value
-          elem['lastname'] = this.usersForm.controls['lastname'].value
-          elem['type'] = this.usersForm.controls['type'].value
-          elem['email'] = this.usersForm.controls['email'].value
-          elem['password'] = this.usersForm.controls['password'].value
-          elem['confirmPassword'] = this.usersForm.controls['confirmPassword'].value
-          elem['subjects'] = arr // FormArray
-          elem['description'] = this.usersForm.controls['description'].value
-          elem['sex'] = this.usersForm.controls['sex'].value ? 'MALE' : 'FEMALE' // checkbox
-          elem['phone'] = this.usersForm.controls['phone'].value.toString() // текстове поле з валідатором
+    if (!this.userForm.controls["id"].untouched || this.userForm.controls["id"].dirty){
+      return
+    }
+    let possibleId = this.userForm.controls["id"].value;
+
+    let newUser: FormUser = {
+      id: possibleId == null || possibleId == '' ? Date.now(): possibleId,
+      name: this.userForm.controls['name'].value,
+      lastname: this.userForm.controls['lastname'].value,
+      type: this.userForm.controls['type'].value,
+      email: this.userForm.controls['email'].value,
+      password: this.userForm.controls['password'].value,
+      subjects: this.userForm.controls['subjects'].value,
+      description: this.userForm.controls['description'].value,
+      sex: this.userForm.controls['sex'].value,
+      phone: this.userForm.controls['phone'].value,
+    }
+    if (possibleId == null || possibleId == ''){
+      this.savedUsers.push(newUser)
+    }
+    else{
+      for (let i = 0; i < this.savedUsers.length; i++) {
+        if (this.savedUsers[i].id == possibleId){
+          this.savedUsers[i] = newUser
         }
       }
-      while (this.subjects.length) {
-        this.subjects.removeAt(0);
+    }
+    localStorage.setItem(SAVED_USERS_KEY, JSON.stringify(this.savedUsers))
+    this.resetForm();
+  }
+
+  get subjects() {
+    return this.userForm.get('subjects') as FormArray;
+  }
+
+  addSubject(text: string = '') {
+    this.subjects.push(this.fb.control(text));
+  }
+
+  checkPassword(password: string, confirmPassword:string){
+    return (formGroup: FormGroup) =>{
+      const passwordControl = formGroup.controls[password];
+      const confirmPasswordControl = formGroup.controls[confirmPassword];
+      if (passwordControl.value !== confirmPasswordControl.value){
+
+        return {valid: false}
       }
-      this.usersForm.reset();
+      return null;
     }
   }
 
-  putElementIntoForm(id: any) {
-    this.usersForm.reset();
-    while(this.subjects.length) {
-      this.subjects.removeAt(0);
+  setUserToEdit(id: number){
+    let toEdit = this.savedUsers.find(user => user.id == id)
+    if (toEdit == undefined){
+      return
     }
-    let elem: any;
-    for (let item of this.formUsers) {
-      if (item.id === id) {
-        elem = item;
-      }
+    this.resetForm()
+    this.userForm.clearValidators()
+    this.userForm.controls['confirmPassword'].disable()
+
+    this.userForm.controls["id"].setValue(toEdit.id);
+    this.userForm.controls["name"].setValue(toEdit.name)
+    this.userForm.controls["lastname"].setValue(toEdit.lastname)
+    this.userForm.controls["type"].setValue(toEdit.type)
+    this.userForm.controls["email"].setValue(toEdit.email)
+    this.userForm.controls["password"].setValue(toEdit.password)
+    this.userForm.controls["description"].setValue(toEdit.description)
+    this.userForm.controls["sex"].setValue(toEdit.sex)
+    this.userForm.controls["phone"].setValue(toEdit.phone)
+
+    this.subjects.clear()
+    for (const subject of toEdit.subjects) {
+      this.addSubject(subject)
     }
-    this.usersForm.controls['id'].patchValue(elem.id);
-    this.usersForm.controls['id'].disable({onlySelf: true});
-    this.usersForm.controls['name'].patchValue(elem.name);
-    this.usersForm.controls['lastname'].patchValue(elem.lastname);
-    this.usersForm.controls['type'].patchValue(elem.type);
-    this.usersForm.controls['email'].patchValue(elem.email);
-    this.usersForm.controls['password'].patchValue(elem.password);
-    for (let i = 0; i < elem.subjects.length ; i++) {
-      let item = elem.subjects[i];
-      this.addSubject();
-      this.subjects.controls[i].patchValue(item);
-    }
-    this.usersForm.controls['description'].patchValue(elem.description);
-    this.usersForm.controls['sex'].patchValue(elem.sex == 'MALE');
-    this.usersForm.controls['phone'].patchValue(elem.phone);
-    this.usersForm.setErrors(null);
   }
+
+  resetForm(){
+    this.userForm.addValidators(() => this.checkPassword("password", "confirmPassword"))
+    this.userForm.controls['confirmPassword'].enable()
+
+    this.subjects.clear()
+    this.addSubject();
+    this.userForm.reset({
+      type: "default",
+      sex: "true"
+    });
+  }
+
+
+}
+
+interface FormUser {
+  id: number,
+  name: string,
+  lastname: string,
+  type: string,
+  email: string,
+  password: string,
+  subjects: Array<string>,
+  description: string,
+  sex: string,
+  phone: string
 }

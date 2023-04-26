@@ -2,6 +2,7 @@
     <ul >
       <li *ngFor="let prod of links" [ngClass]="{'active': prod.active}" (click)="onEvent(prod.label)"><a>{{ prod.label }}</a></li>
       <ul class="users" *ngFor="let user of users">
+        <mat-icon color="warn">person</mat-icon>
         <li routerLink="/user/{{user.id}}">id: {{user.id}} <br>  {{user.lastname}} {{user.name}}</li>
       </ul>
     </ul>

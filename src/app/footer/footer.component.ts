@@ -7,14 +7,11 @@ import {Component, Input} from '@angular/core';
 })
 export class FooterComponent {
   @Input() links: {label: string, active: boolean}[];
-  //@Output() changeActive = new EventEmitter<string>();
+  @Input() users: {name: string, dateOfBirth: Date, id: number, salary: number, workingHours: number, lastname: string}[];
 
   onEvent(label: string) {
     for (let prod of this.links) {
       prod.active = prod.label == label;
     }
-
-    // this.changeActive.emit(label)
   }
-
 }

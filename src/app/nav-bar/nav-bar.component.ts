@@ -15,7 +15,6 @@ export class NavBarComponent {
       prod.active = prod.label == label;
     }
 
-    // this.changeActive.emit(label)
   }
 
 }

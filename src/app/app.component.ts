@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-
+export const USERS_STORAGE_KEY = "users";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

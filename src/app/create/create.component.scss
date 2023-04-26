@@ -1,0 +1,24 @@
+ul{
+  list-style-type: none;
+}
+label, div.label{
+  /*  display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 10px;*/
+}
+button{
+  width: fit-content;
+}
+
+.user-list{
+  mat-list-item:hover{
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+.list-block{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
