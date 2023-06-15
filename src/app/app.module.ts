@@ -30,6 +30,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatTabsModule} from "@angular/material/tabs";
+import { NotificationSnackbarComponent } from './notifications.service';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     HomeComponent,
     UserComponent,
     CreateComponent,
+    NotificationSnackbarComponent,
     TimePipe
   ],
   imports: [
@@ -65,7 +67,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,24 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
   FormGroup,
   Validators
 } from "@angular/forms";
-import {MatSnackBar } from "@angular/material/snack-bar";
-import { Router } from '@angular/router';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {StorageService} from "../storage.service";
+import {NotificationsService} from "../notifications.service";
+import {first} from "rxjs";
 
 const EMAIL_REGEX = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
 const PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$")
 const PHONE_REGEX = new RegExp("^\\+?3?8?(0[5-9][0-9]\\d{7})$")
-const SAVED_USERS_KEY = "savedUsers"
+export const SAVED_USERS_KEY = "savedUsers"
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent implements OnInit{
+export class CreateComponent implements OnInit, OnDestroy {
+
+  test: any;
   savedUsers: FormUser[] = []
   types = [
     "Type A",
@@ -44,21 +48,32 @@ export class CreateComponent implements OnInit{
       validators: this.checkPassword("password", "confirmPassword")
     });
 
-  constructor(private fb: FormBuilder,private router: Router) {
+    constructor(private fb: FormBuilder, private storageService: StorageService, private notificator: NotificationsService) {
   }
 
   ngOnInit(): void {
-    this.savedUsers = JSON.parse(localStorage.getItem(SAVED_USERS_KEY) ?? "[]");
+    this.test = this.storageService.getAllUsers().subscribe(
+      data => {
+        this.savedUsers = data
+      },
+      error => {
+        this.notificator.showError(error)
+      }
+    )
+  }
+
+  ngOnDestroy() {
+    this.test.unsubscribe()
   }
 
   onSubmit() {
-    if (!this.userForm.controls["id"].untouched || this.userForm.controls["id"].dirty){
+    if (!this.userForm.controls["id"].untouched || this.userForm.controls["id"].dirty) {
       return
     }
     let possibleId = this.userForm.controls["id"].value;
 
     let newUser: FormUser = {
-      id: possibleId == null || possibleId == '' ? Date.now(): possibleId,
+      id: possibleId == null || possibleId == '' ? Date.now() : possibleId,
       name: this.userForm.controls['name'].value,
       lastname: this.userForm.controls['lastname'].value,
       type: this.userForm.controls['type'].value,
@@ -69,18 +84,35 @@ export class CreateComponent implements OnInit{
       sex: this.userForm.controls['sex'].value,
       phone: this.userForm.controls['phone'].value,
     }
-    if (possibleId == null || possibleId == ''){
-      this.savedUsers.push(newUser)
-    }
-    else{
-      for (let i = 0; i < this.savedUsers.length; i++) {
-        if (this.savedUsers[i].id == possibleId){
-          this.savedUsers[i] = newUser
+
+    if (possibleId == null || possibleId == '') {
+      this.storageService.createUser(newUser).pipe(first()).subscribe(
+        isUserCreated => {
+          isUserCreated ? this.notificator.showSuccess("User successfully created") : this.notificator.showError("User with such Id already exists")
+        },
+        error => {
+          this.notificator.showError(error)
         }
-      }
+      )
+    } else {
+      this.storageService.updateUser(newUser).pipe(first()).subscribe(
+        isUpdateSuccessful => {
+          isUpdateSuccessful ? this.notificator.showSuccess("User successfully updated") : this.notificator.showError("No user with such id")
+        },
+        error => {
+          this.notificator.showError(error)
+        }
+      )
     }
-    localStorage.setItem(SAVED_USERS_KEY, JSON.stringify(this.savedUsers))
     this.resetForm();
+  }
+
+  deleteUser(id: number) {
+    this.storageService.deleteUser(id).pipe(first()).subscribe(
+      isDeleted => {
+        isDeleted ? this.notificator.showSuccess("User deleted") : this.notificator.showError("No user with such id")
+      }
+    )
   }
 
   get subjects() {
@@ -91,11 +123,11 @@ export class CreateComponent implements OnInit{
     this.subjects.push(this.fb.control(text));
   }
 
-  checkPassword(password: string, confirmPassword:string){
-    return (formGroup: FormGroup) =>{
+  checkPassword(password: string, confirmPassword: string) {
+    return (formGroup: FormGroup) => {
       const passwordControl = formGroup.controls[password];
       const confirmPasswordControl = formGroup.controls[confirmPassword];
-      if (passwordControl.value !== confirmPasswordControl.value){
+      if (passwordControl.value !== confirmPasswordControl.value) {
 
         return {valid: false}
       }
@@ -103,9 +135,15 @@ export class CreateComponent implements OnInit{
     }
   }
 
-  setUserToEdit(id: number){
-    let toEdit = this.savedUsers.find(user => user.id == id)
-    if (toEdit == undefined){
+  setUserToEdit(id: number) {
+    let toEdit: FormUser | undefined
+    this.storageService.getUserById(id).pipe(first()).subscribe(
+      data => {
+        toEdit = data
+        this.notificator.showInfo("Got user with Id")
+      }
+    )
+    if (toEdit == undefined) {
       return
     }
     this.resetForm()
@@ -128,7 +166,7 @@ export class CreateComponent implements OnInit{
     }
   }
 
-  resetForm(){
+  resetForm() {
     this.userForm.addValidators(() => this.checkPassword("password", "confirmPassword"))
     this.userForm.controls['confirmPassword'].enable()
 
@@ -140,10 +178,12 @@ export class CreateComponent implements OnInit{
     });
   }
 
-
+  showSnack() {
+    this.notificator.showSuccess("sss");
+  }
 }
 
-interface FormUser {
+export interface FormUser {
   id: number,
   name: string,
   lastname: string,

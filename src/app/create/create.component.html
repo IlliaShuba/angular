@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayout.xs="column-reverse" fxLayoutAlign="center" fxLayoutAlign.xs="space-around start" fxFlexFill fxLayoutGap="25px">
+<div fxLayout="row" fxLayout.xs="column-reverse" fxLayoutAlign="start" fxLayoutAlign.xs="space-around start" fxFlexFill fxLayoutGap="25px">
   <div fxFlex="30" fxFlex.xs="auto">
-    <form (ngSubmit)="onSubmit();" [formGroup]="userForm" fxLayout="column">
+    <form (ngSubmit)="onSubmit()" [formGroup]="userForm" fxLayout="column">
       <mat-form-field>
         <mat-label>
           ID:
@@ -69,7 +69,7 @@
       </ng-container>
       <button (click)="addSubject()" type="button"
               mat-raised-button fxFlexAlign="center"
-              style="margin-bottom: 15px">add subject</button>
+              style="margin-bottom: 15px">+</button>
 
       <mat-form-field>
         <mat-label>
@@ -87,7 +87,8 @@
         <input type="text" name="tel" formControlName="phone" matInput>
       </mat-form-field>
       <div fxLayout="row" fxLayoutAlign="space-around">
-        <button type="button" (click)="resetForm()" mat-raised-button >Reset</button>
+        <button type="button" (click)="resetForm()" mat-raised-button color="warn">Reset</button>
+        <button type="button" (click)="showSnack()" mat-raised-button color="warn">Snack</button>
         <button mat-raised-button color="primary" fxFlexAlign="center"
                 [disabled]="userForm.invalid"
                 type="submit">Save</button>
@@ -95,15 +96,16 @@
 
     </form>
   </div>
-  <div class="list-block">
-    <p>List of users:</p>
+  <mat-divider [vertical]="true"></mat-divider>
+  <div>
     <mat-list class="user-list">
       <ng-container *ngFor="let user of savedUsers" class="user-list">
-        <mat-list-item (click)="setUserToEdit(user.id)">{{user.name}} {{user.lastname}}</mat-list-item>
+        <mat-list-item><span (click)="setUserToEdit(user.id)">{{user.id}}-{{user.name}} </span><button (click)="deleteUser(user.id)">Delete</button> </mat-list-item>
       </ng-container>
     </mat-list>
-    <button type="button" routerLink="/home" mat-raised-button>home</button>
+    <ul >
+      <li ></li>
+    </ul>
   </div>
 </div>
-
 
